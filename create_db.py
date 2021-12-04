@@ -15,11 +15,10 @@ create_table_users_sql = """CREATE TABLE users
 create_table_messages_sql = """CREATE TABLE messages
 (
     id serial,
-    FOREIGN KEY(id)
-    REFERENCES users(id),
-    creation_date timestamp,
+    from_id INTEGER REFERENCES user(id) ON DELETE CASCADE,
+    to_id INTEGER REFERENCES user(id) ON DELETE CASCADE,
     text varchar(255),
-    PRIMARY KEY(id)
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 """
 
