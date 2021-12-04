@@ -79,7 +79,7 @@ class User:
 
     def delete(self, cursor):
         sql = "DELETE FROM users WHERE id=%s"
-        cursor.execute(sql)
+        cursor.execute(sql, (self._id,))
         self._id = -1
         return True
 
@@ -90,7 +90,7 @@ class Message:
         self.from_id = from_id
         self.to_id = to_id
         self.text = text
-        self.creation_data = None
+        self.creation_date = None
 
     @property
     def id(self):
@@ -98,11 +98,11 @@ class Message:
 
     def save_to_db(self, cursor):
         if self._id == -1:
-            sql = """INSERT INTO message(from_id, to_id, text)
-                        VALUES (%s, %s, %s) RETURNING id"""
+            sql = """INSERT INTO messages(from_id, to_id, text)
+                        VALUES (%s, %s, %s) RETURNING id, creation_date"""
             values = (self.from_id, self.to_id, self.text)
             cursor.execute(sql, values)
-            self._id, self.creation_data = cursor.fetchone()
+            self._id, self.creation_date = cursor.fetchone()
             return True
         else:
             sql = """UPDATE messages SET from_id=%s, to_id=%s, text=%s
@@ -112,12 +112,12 @@ class Message:
             return True
 
     @staticmethod
-    def load_all_messages(cursor, user_id):
+    def load_all_messages(cursor, user_id=None):
         if user_id:
-            sql = "SELECT id, from_id, to_id, text, timestamp FROM messages WHERE to_id = %s"
+            sql = "SELECT id, from_id, to_id, text, creation_date FROM messages WHERE to_id = %s"
             cursor.execute(sql, (user_id,))
         else:
-            sql = "SELECT id, from_id, to_id, text, timestamp FROM messages"
+            sql = "SELECT id, from_id, to_id, text, creation_date FROM messages"
             cursor.execute(sql)
         messages = []
         for row in cursor.fetchall():

@@ -1,5 +1,6 @@
 from psycopg2 import connect, OperationalError
 from psycopg2.errorcodes import DUPLICATE_DATABASE, DUPLICATE_TABLE
+from models import User, Message
 
 user='postgres'
 password = 'coderslab'
@@ -15,8 +16,8 @@ create_table_users_sql = """CREATE TABLE users
 create_table_messages_sql = """CREATE TABLE messages
 (
     id serial,
-    from_id INTEGER REFERENCES user(id) ON DELETE CASCADE,
-    to_id INTEGER REFERENCES user(id) ON DELETE CASCADE,
+    from_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    to_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     text varchar(255),
     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
