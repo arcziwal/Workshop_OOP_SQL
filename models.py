@@ -37,7 +37,8 @@ class User:
             cursor.execute(sql, values)
             return True
 
-    def load_user_by_id(self, cursor, id_):
+    @staticmethod
+    def load_user_by_id(cursor, id_):
         sql = "SELECT id, username, hashed_password FROM users WHERE id=%s"
         cursor.execute(sql, (id_,))
         data = cursor.fetchone()
@@ -50,7 +51,8 @@ class User:
         else:
             return None
 
-    def load_user_by_username(self, cursor, username):
+    @staticmethod
+    def load_user_by_username(cursor, username):
         sql = "SELECT id, username, hashed_password FROM users WHERE username=%s"
         cursor.execute(sql, (username,))
         data = cursor.fetchone()
